@@ -12,7 +12,7 @@ class FocalPointPicker
 {
     public static ?Position $defaultPosition;
 
-    public static function init()
+    public static function init(): void
     {
         \add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
         \add_action('attachment_fields_to_save', [self::class, 'attachmentFieldsToSave'], 10, 2);
@@ -35,8 +35,8 @@ class FocalPointPicker
         \wp_add_inline_script(
             'focal-point-picker',
             \sprintf(
-                "window.FocalPointPickerConfig = %s;",
-                \wp_json_encode($jsConfig),
+                "var focalPointPicker = %s;",
+                \wp_json_encode($jsConfig, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK),
             ),
             'before',
         );
@@ -77,6 +77,9 @@ class FocalPointPicker
     /**
      * Render the focal point picker field.
      * Uses custom elements for simple self-initialization
+     *
+     * @param array<string, mixed> $fields
+     * @return array<string, mixed>
      */
     public static function attachmentFieldsToEdit(
         array $fields,
@@ -115,11 +118,15 @@ class FocalPointPicker
 
     /**
      * Save the focal point
+     *
+     * @param array<string, mixed> $post
+     * @param array<string, mixed> $attachmentData
+     * @return array<string, mixed>
      */
     public static function attachmentFieldsToSave(
         array $post,
         array $attachmentData
-    ) {
+    ): array {
         $id = $post['ID'] ?? '';
         \check_ajax_referer('update-post_' . $id, 'nonce');
 
@@ -163,6 +170,9 @@ class FocalPointPicker
 
     /**
      * Add the focal point to the image attributes in WordPress image functions
+     *
+     * @param array<string, mixed> $atts
+     * @return array<string, mixed>
      */
     public static function wp_get_attachment_image_attributes(
         array $atts,

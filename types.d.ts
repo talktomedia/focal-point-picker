@@ -1,5 +1,5 @@
 interface Window {
-  FocalPointPickerConfig?: {
+  focalPointPicker?: {
     defaultPosition?: { top?: number; left?: number };
   };
 }

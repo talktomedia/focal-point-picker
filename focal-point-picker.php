@@ -44,7 +44,7 @@ FocalPointPicker::init();
  * Helper function to retrieve a focal point for an image
  */
 if (!\function_exists('fcp_get_focalpoint')) {
-    function fcp_get_focalpoint(WP_Post|int $post)
+    function fcp_get_focalpoint(WP_Post|int $post): FocalPoint
     {
         return new FocalPoint($post);
     }

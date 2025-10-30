@@ -92,17 +92,16 @@
      * @return {Promise<void>}
      */
     async init() {
-      const { defaultPosition } = window.FocalPointPickerConfig ?? {};
-      this.defaultPosition = [
-        defaultPosition?.left ?? 0.5,
-        defaultPosition?.top ?? 0.5,
-      ];
-
       await nextTick();
 
       if (!document.contains(this)) {
         return;
       }
+
+      this.defaultPosition = [
+        window.focalPointPicker?.defaultPosition?.left ?? 0.5,
+        window.focalPointPicker?.defaultPosition?.top ?? 0.5,
+      ];
 
       const mediaModalRoot = this.closest(".media-frame-content");
       const classicRoot = this.closest("#post-body-content");
