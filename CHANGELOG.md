@@ -19,6 +19,8 @@
 - ca70789: Add a WP_CLI command `wp fcp apply-default-position` to apply the default position to all attachments
 - 54e3a09: phpstan level 6
 
+Thanks @bahia0019 for the inspiration!
+
 ## 1.3.8
 
 ### Patch Changes
