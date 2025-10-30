@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "husky",
     "format:assets": "npx prettier --write '**/*.{js,css}'",
-    "format:php": "vendor/bin/php-cs-fixer fix --config .phpcsfixer.config.php --allow-risky=yes",
+    "format:php": "./vendor/bin/pint",
     "version": "pnpm changeset version && bin/cli.js version:patch"
   },
   "devDependencies": {

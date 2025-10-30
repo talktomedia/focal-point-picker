@@ -22,8 +22,8 @@
     "composer/installers": "^2.3"
   },
   "require-dev": {
-    "symfony/var-dumper": "^7.1",
-    "friendsofphp/php-cs-fixer": "^3.59"
+    "laravel/pint": "^1.25",
+    "symfony/var-dumper": "^7.1"
   },
   "config": {
     "optimize-autoloader": true,
