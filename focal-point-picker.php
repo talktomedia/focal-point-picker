@@ -15,6 +15,7 @@
  */
 
 use Hirasso\FocalPointPicker\FocalPointPicker;
+use Hirasso\FocalPointPicker\CLI;
 use Hirasso\FocalPointPicker\FocalPoint;
 
 /** Exit if accessed directly */
@@ -39,6 +40,7 @@ require_once match(\is_readable(__DIR__ . '/vendor/autoload.php')) {
  * Initialize the Admin Functionality
  */
 FocalPointPicker::init();
+CLI::init();
 
 /**
  * Helper function to retrieve a focal point for an image
