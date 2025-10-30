@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.4.0
+
+### Minor Changes
+
+- 540c8c6: Add a filter `hirasso/fcp/default-position` for filtering the default focal point position. Usage:
+
+  ```php
+  use Hirasso\FocalPointPicker\Position;
+
+  /** center top. Great for preserving faces in cropped images */
+  add_filter(
+      'hirasso/fcp/default-position',
+      fn() => new Position(left: 0.5, top: 0)
+  );
+  ```
+
+- ca70789: Add a WP_CLI command `wp fcp apply-default-position` to apply the default position to all attachments
+- 54e3a09: phpstan level 6
+
 ## 1.3.8
 
 ### Patch Changes
