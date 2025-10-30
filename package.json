@@ -7,6 +7,7 @@
     "prepare": "husky",
     "format:assets": "npx prettier --write '**/*.{js,css}'",
     "format:php": "./vendor/bin/pint",
+    "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
     "version": "pnpm changeset version && bin/cli.js version:patch"
   },
   "devDependencies": {
