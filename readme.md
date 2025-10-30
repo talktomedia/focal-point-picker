@@ -172,3 +172,20 @@ add_filter(
 ```
 
 This might come in handy if you have many photographs where the eyes of people are at the top of the image somewhere and you don't want to adjust them all manually.
+
+## WP_CLI Interface
+
+### `fcp apply-default-position`
+
+Apply the default position to existing images:
+
+```shell
+# apply the default position to a selection of images:
+wp fcp apply-default-position 23 42 999
+
+# apply the default position to ALL of your images:
+wp fcp apply-default-position --all
+
+# apply the default position to ALL of your images, skipping the confirmation prompt (for scripting)
+wp fcp apply-default-position --all --yes
+```
