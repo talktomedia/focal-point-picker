@@ -18,19 +18,19 @@ use Hirasso\FocalPointPicker\FocalPointPicker;
 use Hirasso\FocalPointPicker\FocalPoint;
 
 /** Exit if accessed directly */
-if (!defined('ABSPATH')) {
+if (!\defined('ABSPATH')) {
     exit;
 }
 
-define('WPFP_PLUGIN_URI', untrailingslashit(plugin_dir_url(__FILE__)));
-define('WPFP_PLUGIN_DIR', untrailingslashit(__DIR__));
+\define('WPFP_PLUGIN_URI', \untrailingslashit(\plugin_dir_url(__FILE__)));
+\define('WPFP_PLUGIN_DIR', \untrailingslashit(__DIR__));
 
 /**
  * Require the autoloader
  * - vendor/autoload.php in development (composer)
  * - autoload.dist.php in production (not composer)
  */
-require_once match(is_readable(__DIR__ . '/vendor/autoload.php')) {
+require_once match(\is_readable(__DIR__ . '/vendor/autoload.php')) {
     true => __DIR__ . '/vendor/autoload.php',
     default => __DIR__ . '/autoload.dist.php'
 };
@@ -43,7 +43,7 @@ FocalPointPicker::init();
 /**
  * Helper function to retrieve a focal point for an image
  */
-if (!function_exists('fcp_get_focalpoint')) {
+if (!\function_exists('fcp_get_focalpoint')) {
     function fcp_get_focalpoint(WP_Post|int $post)
     {
         return new FocalPoint($post);

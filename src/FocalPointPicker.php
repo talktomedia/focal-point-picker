@@ -12,10 +12,10 @@ class FocalPointPicker
 {
     public static function init()
     {
-        add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
-        add_action('attachment_fields_to_save', [self::class, 'attachmentFieldsToSave'], 10, 2);
-        add_filter('wp_get_attachment_image_attributes', [self::class, 'wp_get_attachment_image_attributes'], 10, 2);
-        add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
+        \add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
+        \add_action('attachment_fields_to_save', [self::class, 'attachmentFieldsToSave'], 10, 2);
+        \add_filter('wp_get_attachment_image_attributes', [self::class, 'wp_get_attachment_image_attributes'], 10, 2);
+        \add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
     }
 
     /**
@@ -23,8 +23,21 @@ class FocalPointPicker
      */
     public static function enqueueAssets(): void
     {
-        wp_enqueue_style('focal-point-picker-css', self::assetUri('/focal-point-picker.css'), [], null);
-        wp_enqueue_script('focal-point-picker-js', self::assetUri('/focal-point-picker.js'), ['jquery', 'jquery-ui-draggable'], null, true);
+        \wp_enqueue_style('focal-point-picker', self::assetUri('/focal-point-picker.css'), [], null);
+        \wp_enqueue_script('focal-point-picker', self::assetUri('/focal-point-picker.js'), ['jquery', 'jquery-ui-draggable'], null, true);
+        \wp_add_inline_script(
+            'focal-point-picker',
+            \sprintf(
+                "window.FocalPointPickerConfig = %s;",
+                \wp_json_encode([
+                    'defaultValue' => [
+                        'top' => \apply_filters('focal-point-picker-default-top', 0.5),
+                        'left' => \apply_filters('focal-point-picker-default-left', 0.5),
+                    ]
+                ]),
+            ),
+            'before',
+        );
     }
 
     /**
@@ -32,11 +45,11 @@ class FocalPointPicker
      */
     private static function assetUri(string $path): string
     {
-        $uri = WPFP_PLUGIN_URI . '/' . ltrim($path, '/');
-        $file = WPFP_PLUGIN_DIR . '/' . ltrim($path, '/');
+        $uri = WPFP_PLUGIN_URI . '/' . \ltrim($path, '/');
+        $file = WPFP_PLUGIN_DIR . '/' . \ltrim($path, '/');
 
-        if (file_exists($file)) {
-            $version = filemtime($file);
+        if (\file_exists($file)) {
+            $version = \filemtime($file);
             $uri .= "?v=$version";
         }
         return $uri;
@@ -50,17 +63,17 @@ class FocalPointPicker
         array $fields,
         WP_Post $post
     ): array {
-        if (!wp_attachment_is_image($post)) {
+        if (!\wp_attachment_is_image($post)) {
             return $fields;
         }
         $focalPoint = new FocalPoint($post);
 
-        ob_start() ?>
+        \ob_start() ?>
 
         <focal-point-picker>
             <div data-focalpoint-input-wrap>
-                <input data-focalpoint-input type='text' readonly value="<?php esc_attr_e($focalPoint->left) ?> <?php esc_attr_e($focalPoint->top) ?>" id='focalpoint-input' name='attachments[<?php esc_attr_e($post->ID) ?>][focalpoint]'>
-                <button data-focalpoint-reset <?= disabled($focalPoint->hasDefaultValue()) ?> type="button" class="button-primary">Reset</button>
+                <input data-focalpoint-input type='text' readonly value="<?php \esc_attr_e($focalPoint->left) ?> <?php \esc_attr_e($focalPoint->top) ?>" id='focalpoint-input' name='attachments[<?php \esc_attr_e($post->ID) ?>][focalpoint]'>
+                <button data-focalpoint-reset <?= \disabled($focalPoint->hasDefaultValue()) ?> type="button" class="button-primary">Reset</button>
             </div>
 
             <div data-focalpoint-preview aria-hidden="true">
@@ -70,10 +83,10 @@ class FocalPointPicker
             <button data-focalpoint-handle tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
         </focal-point-picker>
 
-<?php $html = ob_get_clean();
+<?php $html = \ob_get_clean();
 
         $fields['focalpoint-input'] = [
-            'label' => __('Focal Point'),
+            'label' => \__('Focal Point'),
             'input'  => 'html',
             'html' => $html,
         ];
@@ -89,32 +102,32 @@ class FocalPointPicker
         array $attachmentData
     ) {
         $id = $post['ID'] ?? '';
-        check_ajax_referer('update-post_' . $id, 'nonce');
+        \check_ajax_referer('update-post_' . $id, 'nonce');
 
-        if (!wp_attachment_is_image($id)) {
+        if (!\wp_attachment_is_image($id)) {
             return $post;
         }
 
-        $focalPoint = array_map(
+        $focalPoint = \array_map(
             'trim',
-            explode(' ', $attachmentData['focalpoint'] ?? '')
+            \explode(' ', $attachmentData['focalpoint'] ?? '')
         );
 
         /** Validation: Array of two? */
-        if (count($focalPoint) !== 2) {
+        if (\count($focalPoint) !== 2) {
             return $post;
         }
 
         /** Validation: All numeric? */
         foreach ($focalPoint as $value) {
-            if (!is_numeric($value)) {
+            if (!\is_numeric($value)) {
                 return $post;
             }
         }
 
-        [$left, $top] = array_map('floatval', $focalPoint);
+        [$left, $top] = \array_map('floatval', $focalPoint);
 
-        $post = array_replace_recursive(
+        $post = \array_replace_recursive(
             $post,
             [
                 'meta_input' => [
@@ -136,13 +149,13 @@ class FocalPointPicker
         array $atts,
         WP_Post $attachment
     ): array {
-        if (!wp_attachment_is_image($attachment)) {
+        if (!\wp_attachment_is_image($attachment)) {
             return $atts;
         }
         $focalPoint = new FocalPoint($attachment);
 
         $atts['class'] ??= '';
-        if (!str_contains($atts['class'], "focal-point-image")) {
+        if (!\str_contains($atts['class'], "focal-point-image")) {
             $atts['class'] .= " focal-point-image";
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
@@ -25,13 +26,13 @@ final class FocalPoint
 
     public function __construct(WP_Post|int $post)
     {
-        $post = get_post($post);
+        $post = \get_post($post);
 
-        if (!wp_attachment_is_image($post)) {
+        if (!\wp_attachment_is_image($post)) {
             throw new InvalidArgumentException("\$post is not an image");
         }
 
-        $raw = get_post_meta($post->ID, 'focalpoint', true);
+        $raw = \get_post_meta($post->ID, 'focalpoint', true);
 
         $this->left = $this->sanitize($raw['left'] ?? null);
         $this->top = $this->sanitize($raw['top'] ?? null);
@@ -59,16 +60,16 @@ final class FocalPoint
      */
     private function sanitize(mixed $value): float
     {
-        if (!is_numeric($value) && empty($value)) {
+        if (!\is_numeric($value) && empty($value)) {
             $value = 0.5;
         }
 
-        $value = floatval($value);
+        $value = \floatval($value);
 
         if ($value > 1) {
             $value /= 100;
         }
 
-        return round($value, 2);
+        return \round($value, 2);
     }
 }
