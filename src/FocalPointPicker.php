@@ -52,7 +52,7 @@ class FocalPointPicker
         }
 
         self::$defaultPosition = \apply_filters(
-            'focal-point-picker/default-position',
+            'hirasso/fcp/default-position',
             new Position(0.5, 0.5)
         );
 
