@@ -22,8 +22,11 @@
     "composer/installers": "^2.3"
   },
   "require-dev": {
+    "laravel/pint": "^1.25",
+    "phpstan/phpstan": "^2.1",
+    "roots/wordpress": "^6.8",
     "symfony/var-dumper": "^7.1",
-    "friendsofphp/php-cs-fixer": "^3.59"
+    "wp-cli/wp-cli": "^2.12"
   },
   "config": {
     "optimize-autoloader": true,
@@ -31,7 +34,11 @@
     "sort-packages": true,
     "allow-plugins": {
       "composer/installers": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "roots/wordpress-core-installer": true
     }
+  },
+  "extra": {
+    "wordpress-install-dir": "vendor/.wordpress"
   }
 }

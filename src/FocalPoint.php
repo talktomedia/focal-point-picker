@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
@@ -25,16 +26,22 @@ final class FocalPoint
 
     public function __construct(WP_Post|int $post)
     {
-        $post = get_post($post);
+        $post = \get_post($post);
 
-        if (!wp_attachment_is_image($post)) {
+        if (!\wp_attachment_is_image($post)) {
             throw new InvalidArgumentException("\$post is not an image");
         }
 
-        $raw = get_post_meta($post->ID, 'focalpoint', true);
+        $raw = \get_post_meta($post->ID, 'focalpoint', true);
+        $default = FocalPointPicker::getDefaultPosition();
 
-        $this->left = $this->sanitize($raw['left'] ?? null);
-        $this->top = $this->sanitize($raw['top'] ?? null);
+        $position = new Position(
+            left: $raw['left'] ?? $default->left,
+            top: $raw['top'] ?? $default->top,
+        );
+
+        $this->left = $position->left;
+        $this->top = $position->top;
 
         $this->leftPercent = $this->left * 100;
         $this->topPercent = $this->top * 100;
@@ -47,28 +54,13 @@ final class FocalPoint
     }
 
     /**
-     * Is the focal point's value equal to the default (0.5, 0.5)?
+     * Is the focal point's value equal to the default value
      */
-    public function hasDefaultValue(): bool
+    public function isDefaultPosition(): bool
     {
-        return $this->x === 0.5 && $this->y === 0.5;
+        $defaultPosition = FocalPointPicker::getDefaultPosition();
+        return $this->x === $defaultPosition->top && $this->y === $defaultPosition->left;
     }
 
-    /**
-     * Sanitize a value (left or top)
-     */
-    private function sanitize(mixed $value): float
-    {
-        if (!is_numeric($value) && empty($value)) {
-            $value = 0.5;
-        }
 
-        $value = floatval($value);
-
-        if ($value > 1) {
-            $value /= 100;
-        }
-
-        return round($value, 2);
-    }
 }

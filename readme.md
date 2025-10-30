@@ -67,7 +67,7 @@ object(FocalPointPicker\FocalPoint)#2796 (4) {
 <?php
 
 $imageID = 1234;
-$imageSRC = wp_get_attachment_image_src($imageID)['large'];
+$imageSRC = wp_get_attachment_image_src($imageID, 'large');
 $focus = fcp_get_focalpoint($imageID);
 
 ?>
@@ -99,7 +99,7 @@ $focus = fcp_get_focalpoint($imageID);
 <?php
 
 $imageID = 1234;
-$imageSRC = wp_get_attachment_image_src($imageID)['large'];
+$imageSRC = wp_get_attachment_image_src($imageID, 'large');
 $focus = fcp_get_focalpoint($imageID);
 
 ?>
@@ -147,4 +147,45 @@ You can use that like this, for example:
     calc(var(--focal-point-left, 0.5) * 100%)
     calc(var(--focal-point-top, 0.5) * 100%);
 }
+```
+
+## Filters
+
+The default position of the focal point can be customized using filters:
+
+```php
+use Hirasso\FocalPointPicker\Position;
+
+/** center top. Great for preserving faces in cropped images */
+add_filter(
+    'hirasso/fcp/default-position',
+    fn() => new Position(left: 0.5, top: 0)
+);
+
+/** or simply: */
+add_filter(
+    'hirasso/fcp/default-position',
+    fn() => new Position(top: 0)
+);
+
+/** etc... */
+```
+
+This might come in handy if you have many photographs where the eyes of people are at the top of the image somewhere and you don't want to adjust them all manually.
+
+## WP_CLI Interface
+
+### `fcp apply-default-position`
+
+Apply the default position to existing images:
+
+```shell
+# apply the default position to a selection of images:
+wp fcp apply-default-position 23 42 999
+
+# apply the default position to ALL of your images:
+wp fcp apply-default-position --all
+
+# apply the default position to ALL of your images, skipping the confirmation prompt (for scripting)
+wp fcp apply-default-position --all --yes
 ```

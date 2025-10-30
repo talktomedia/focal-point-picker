@@ -1,3 +1,5 @@
+/// <reference path="./types.d.ts" />
+
 "use strict";
 
 /**
@@ -54,7 +56,8 @@
     resetButton;
     /** @type {boolean} dragging */
     dragging = false;
-    defaultValue = [0.5, 0.5];
+    /** @type [number, number] */
+    defaultPosition = [0.5, 0.5];
 
     constructor() {
       super();
@@ -94,6 +97,11 @@
       if (!document.contains(this)) {
         return;
       }
+
+      this.defaultPosition = [
+        window.focalPointPicker?.defaultPosition?.left ?? 0.5,
+        window.focalPointPicker?.defaultPosition?.top ?? 0.5,
+      ];
 
       const mediaModalRoot = this.closest(".media-frame-content");
       const classicRoot = this.closest("#post-body-content");
@@ -218,7 +226,7 @@
       const { input } = this;
       if (!input) {
         console.error("no input found", { input });
-        return this.defaultValue;
+        return this.defaultPosition;
       }
 
       const inputValue = input.value.trim();
@@ -226,7 +234,7 @@
 
       if (values.length > 2) {
         console.error("invalid value:", inputValue);
-        return this.defaultValue;
+        return this.defaultPosition;
       }
 
       return values.map(function (/** @type {string} */ value) {
@@ -247,7 +255,7 @@
 
       if (!img) {
         console.error("missing image", { img });
-        return this.defaultValue;
+        return this.defaultPosition;
       }
 
       const handleRect = handle.getBoundingClientRect();
@@ -310,7 +318,7 @@
       }
       const rect = this.img.getBoundingClientRect();
 
-      this.setHandlePosition(0.5, 0.5);
+      this.setHandlePosition(...this.defaultPosition);
       this.applyFocalPointFromHandle();
       $(this.input).trigger("change");
     };
@@ -365,7 +373,7 @@
      */
     adjustResetButton(left, top) {
       if (this.resetButton) {
-        this.resetButton.disabled = this.isDefaultValue(left, top);
+        this.resetButton.disabled = this.isDefaultPosition(left, top);
       }
     }
 
@@ -375,8 +383,10 @@
      * @param {number} top
      * @return {boolean}
      */
-    isDefaultValue(left, top) {
-      return left === this.defaultValue[0] && top === this.defaultValue[1];
+    isDefaultPosition(left, top) {
+      return (
+        left === this.defaultPosition[0] && top === this.defaultPosition[1]
+      );
     }
 
     /**
