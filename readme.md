@@ -156,13 +156,13 @@ The default position of the focal point can be customized using filters:
 ```php
 use Hirasso\FocalPointPicker\Position;
 
-/** top right */
+/** center top. Great for preserving faces in cropped images */
 add_filter(
     'focal-point-picker/default-position',
-    fn() => new Position(left: 1, top: 0)
+    fn() => new Position(left: 0.5, top: 0)
 );
 
-/** top center */
+/** or simply: */
 add_filter(
     'focal-point-picker/default-position',
     fn() => new Position(top: 0)
