@@ -10,6 +10,8 @@ use WP_Post;
 
 class FocalPointPicker
 {
+    public static ?Position $defaultPosition;
+
     public static function init()
     {
         \add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
@@ -25,19 +27,36 @@ class FocalPointPicker
     {
         \wp_enqueue_style('focal-point-picker', self::assetUri('/focal-point-picker.css'), [], null);
         \wp_enqueue_script('focal-point-picker', self::assetUri('/focal-point-picker.js'), ['jquery', 'jquery-ui-draggable'], null, true);
+
+        $jsConfig = [
+            'defaultPosition' => self::getDefaultPosition()
+        ];
+
         \wp_add_inline_script(
             'focal-point-picker',
             \sprintf(
                 "window.FocalPointPickerConfig = %s;",
-                \wp_json_encode([
-                    'defaultValue' => [
-                        'top' => \apply_filters('focal-point-picker-default-top', 0.5),
-                        'left' => \apply_filters('focal-point-picker-default-left', 0.5),
-                    ]
-                ]),
+                \wp_json_encode($jsConfig),
             ),
             'before',
         );
+    }
+
+    /**
+     * Get the default value, ONCE
+     */
+    public static function getDefaultPosition(): Position
+    {
+        if (isset(self::$defaultPosition)) {
+            return self::$defaultPosition;
+        }
+
+        self::$defaultPosition = \apply_filters(
+            'focal-point-picker/default-position',
+            new Position(0.5, 0.5)
+        );
+
+        return self::$defaultPosition;
     }
 
     /**
@@ -72,8 +91,8 @@ class FocalPointPicker
 
         <focal-point-picker>
             <div data-focalpoint-input-wrap>
-                <input data-focalpoint-input type='text' readonly value="<?php \esc_attr_e($focalPoint->left) ?> <?php \esc_attr_e($focalPoint->top) ?>" id='focalpoint-input' name='attachments[<?php \esc_attr_e($post->ID) ?>][focalpoint]'>
-                <button data-focalpoint-reset <?= \disabled($focalPoint->hasDefaultValue()) ?> type="button" class="button-primary">Reset</button>
+                <input data-focalpoint-input type='text' readonly value="<?php \esc_attr_e((string) $focalPoint->left) ?> <?php \esc_attr_e((string) $focalPoint->top) ?>" id='focalpoint-input' name='attachments[<?php \esc_attr_e((string) $post->ID) ?>][focalpoint]'>
+                <button data-focalpoint-reset <?= \disabled($focalPoint->isDefaultPosition()) ?> type="button" class="button-primary">Reset</button>
             </div>
 
             <div data-focalpoint-preview aria-hidden="true">

@@ -67,7 +67,7 @@ object(FocalPointPicker\FocalPoint)#2796 (4) {
 <?php
 
 $imageID = 1234;
-$imageSRC = wp_get_attachment_image_src($imageID)['large'];
+$imageSRC = wp_get_attachment_image_src($imageID, 'large');
 $focus = fcp_get_focalpoint($imageID);
 
 ?>
@@ -99,7 +99,7 @@ $focus = fcp_get_focalpoint($imageID);
 <?php
 
 $imageID = 1234;
-$imageSRC = wp_get_attachment_image_src($imageID)['large'];
+$imageSRC = wp_get_attachment_image_src($imageID, 'large');
 $focus = fcp_get_focalpoint($imageID);
 
 ?>
@@ -148,3 +148,27 @@ You can use that like this, for example:
     calc(var(--focal-point-top, 0.5) * 100%);
 }
 ```
+
+## Filters
+
+The default position of the focal point can be customized using filters:
+
+```php
+use Hirasso\FocalPointPicker\Position;
+
+/** top right */
+add_filter(
+    'focal-point-picker/default-position',
+    fn() => new Position(left: 1, top: 0)
+);
+
+/** top center */
+add_filter(
+    'focal-point-picker/default-position',
+    fn() => new Position(top: 0)
+);
+
+/** etc... */
+```
+
+This might come in handy if you have many photographs where the eyes of people are at the top of the image somewhere and you don't want to adjust them all manually.
