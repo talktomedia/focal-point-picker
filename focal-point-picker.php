@@ -23,8 +23,8 @@ if (!\defined('ABSPATH')) {
     exit;
 }
 
-\define('WPFP_PLUGIN_URI', \untrailingslashit(\plugin_dir_url(__FILE__)));
-\define('WPFP_PLUGIN_DIR', \untrailingslashit(__DIR__));
+\define( 'WPFP_PLUGIN_URI', \untrailingslashit( \get_template_directory() . str_replace( wp_normalize_path( get_template_directory() ), "", wp_normalize_path( __DIR__ ) ) ) );
+\define( 'WPFP_PLUGIN_DIR', \untrailingslashit( __DIR__ ) );
 
 /**
  * Require the autoloader
